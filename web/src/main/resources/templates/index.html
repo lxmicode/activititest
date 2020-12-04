@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+
+
+<table id="table" border="1">
+    <tr>
+        <th>编号</th>
+        <th width="120px">租户编号</th>
+        <th width="120px">流程名</th>
+        <th width="50px">版本</th>
+        <th width="150px">操作</th>
+    </tr>
+</table>
+
+<script>
+    var url = "http://localhost:8081/";
+    $(function(){
+        $.ajax({
+            url: url+"depList", success: function (result) {
+                for (var d of result.data){
+                    $("#table").append('' +
+                        '<tr><td>'+d.key+'</td>' +
+                        '<td>'+d.tenantId+'</td>' +
+                        '<td>'+d.name+'</td>' +
+                        '<td>'+d.version+'</td>' +
+                        '<td>' +
+                        '<button pid="'+d.id+'" onclick="start(this)">启动</button>' +
+                        '<button pid="'+d.id+'" onclick="start(this)">禁止</button>' +
+                        '<button pid="'+d.id+'" onclick="delDepl(this)">删除</button>' +
+                        '</td>' +
+                        '</tr>');
+                }
+            }
+        });
+    });
+
+    function delDepl(e) {
+        $.ajax({
+            url: url+"delDepl?key="+$(e).attr("pid"), success: function (result) {
+                alert(result.message);
+                window.location.reload();
+            }
+        });
+    }
+
+    function start(e) {
+        $.ajax({
+            url: url+"start?key="+$(e).attr("pid"), success: function (result) {
+                alert(result.message);
+                window.location.reload();
+            }
+        });
+    }
+</script>
+</body>
+</html>

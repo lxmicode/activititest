@@ -15,4 +15,8 @@ public class Result implements Serializable {
         this.message = message;
         this.data = data;
     }
+    public Result(Integer code, String message) {
+        this.code = code;
+        this.message = message;
+    }
 }

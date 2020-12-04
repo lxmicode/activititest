@@ -5,6 +5,7 @@ server:
 spring:
   #Activiti property configuration
   activiti:
+
     database-schema-update: true
     job-executor-activate: true # asyncExecutorEnabled属性设置设置true后将代替那些老的Job executor
     history-level: full
@@ -26,7 +27,7 @@ spring:
     timeBetweenEvictionRunsMillis: 60000
     minEvictableIdleTimeMillis: 300000
     validationQuery: SELECT 1 FROM DUAL
-    testWhileIdle: true
+    testWhileIdle: false
     testOnBorrow: false
     testOnReturn: false
     poolPreparedStatements: true
@@ -44,6 +45,12 @@ spring:
       max-pool-prepared-statement-per-connection-size: 20
       filters: stat,wall,slf4j
       connection-properties=druid.stat.mergeSql=true;druid.stat.slowSqlMillis: 5000
+  thymeleaf:
+    prefix: classpath:/templates/
+    mode: html5
+    suffix: .html
+    cache: false
+
 
 
 logging:
