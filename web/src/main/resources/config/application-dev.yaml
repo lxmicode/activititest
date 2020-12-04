@@ -45,6 +45,7 @@ spring:
       filters: stat,wall,slf4j
       connection-properties=druid.stat.mergeSql=true;druid.stat.slowSqlMillis: 5000
 
+
 logging:
   level:
     com.test.springboot.activiti: debug

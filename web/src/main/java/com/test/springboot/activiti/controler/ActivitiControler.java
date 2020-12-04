@@ -1,31 +1,39 @@
 package com.test.springboot.activiti.controler;
 
-import org.activiti.engine.RepositoryService;
-import org.activiti.engine.TaskService;
+import com.test.springboot.activiti.entity.Result;
+import org.activiti.engine.*;
 import org.activiti.engine.repository.Deployment;
-import org.activiti.engine.task.Task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@Controller
+@RestController
 public class ActivitiControler {
 
-
+    @Autowired
+    ProcessEngine engine;
+    //资源管理类
     @Autowired
     RepositoryService repositoryService;
+    //任务管理类
     @Autowired
     TaskService taskService;
+    //流行运行管理
+    @Autowired
+    RuntimeService runtimeService;
+    //历史管理
+    @Autowired
+    HistoryService historyService;
+    //引擎管理
+    @Autowired
+    ManagementService managementService;
 
     @GetMapping("/")
-    @ResponseBody
     Object index() {
-
         repositoryService.createDeployment().deploy();
 
         List<Deployment> list = repositoryService.createDeploymentQuery().list();
@@ -34,15 +42,33 @@ public class ActivitiControler {
         return new ResponseEntity<>( HttpStatus.OK);
     }
 
-    @GetMapping("/list")
-    @ResponseBody
-    Object list() {
-        List<Task> list = taskService.createTaskQuery()
-                .taskAssignee("")
-                .list();
-        for (Task task : list) {
-            System.out.printf(task.getName());
+    @GetMapping("/dep")
+    Object dep() {
+
+        repositoryService.createDeployment()
+                .name("第一个测试")
+                .tenantId("test0001")
+                .addClasspathResource("bpnm/test.bpmn")
+                .addClasspathResource("bpnm/test.svg")
+                .deploy();
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+
+
+    @GetMapping("/depList")
+    Object depList() {
+        List<Deployment> list = repositoryService.createDeploymentQuery().list();
+//        return new ResponseEntity<>(list, HttpStatus.OK);
+
+        for (Deployment dep : list) {
+            System.out.println("=====================");
+            System.out.println(dep.getName());
+            System.out.println(dep.getKey());
+            System.out.println(dep.getTenantId());
         }
-        return new ResponseEntity<>(list, HttpStatus.OK);
+
+        return ResponseEntity.ok(new Result(HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase(),"222"));
     }
 }
