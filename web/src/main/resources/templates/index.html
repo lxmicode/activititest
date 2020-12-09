@@ -11,7 +11,8 @@
 
 <table id="table" border="1">
     <tr>
-        <th>编号</th>
+        <th>id</th>
+        <th>业务编号</th>
         <th width="120px">租户编号</th>
         <th width="120px">流程名</th>
         <th width="50px">版本</th>
@@ -26,7 +27,8 @@
             url: url+"depList", success: function (result) {
                 for (var d of result.data){
                     $("#table").append('' +
-                        '<tr><td>'+d.key+'</td>' +
+                        '<tr><td>'+d.id+'</td>' +
+                        '<td>'+d.key+'</td>' +
                         '<td>'+d.tenantId+'</td>' +
                         '<td>'+d.name+'</td>' +
                         '<td>'+d.version+'</td>' +
@@ -43,7 +45,7 @@
 
     function delDepl(e) {
         $.ajax({
-            url: url+"delDepl?key="+$(e).attr("pid"), success: function (result) {
+            url: url+"delDepl?id="+$(e).attr("pid"), success: function (result) {
                 alert(result.message);
                 window.location.reload();
             }
@@ -52,7 +54,7 @@
 
     function start(e) {
         $.ajax({
-            url: url+"start?key="+$(e).attr("pid"), success: function (result) {
+            url: url+"start?id="+$(e).attr("pid"), success: function (result) {
                 alert(result.message);
                 window.location.reload();
             }

@@ -2,7 +2,10 @@ package com.test.springboot.activiti.controler;
 
 import com.test.springboot.activiti.entity.Result;
 import org.activiti.engine.*;
+import org.activiti.engine.impl.persistence.entity.DeploymentEntity;
 import org.activiti.engine.repository.Deployment;
+import org.activiti.engine.repository.ProcessDefinition;
+import org.activiti.engine.repository.ProcessDefinitionQuery;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -56,15 +59,28 @@ public class ActivitiControler {
      */
     @GetMapping("/dep")
     Object dep() {
-        repositoryService.createDeployment()
+        DeploymentEntity deploy = (DeploymentEntity) repositoryService.createDeployment()
                 .name("第一个测试")
-                .key("qingjia")
+//                .key("qingjia")
                 .tenantId(tenantId)
-                .addClasspathResource("bpnm/test.bpmn")
-                .addClasspathResource("bpnm/test.svg")
+                .addClasspathResource("bpnm/test2.bpmn20.xml")
+                .addClasspathResource("bpnm/test2.png")
+                .enableDuplicateFiltering()
                 .deploy();
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        if(deploy.isNew()==false){
+            return ResponseEntity.ok(
+                    new Result(
+                            HttpStatus.CREATED.value()
+                            , HttpStatus.CREATED.getReasonPhrase()
+                            ,"已经存在了，请勿重复添加！"));
+        }
+
+        return ResponseEntity.ok(
+                new Result(
+                        HttpStatus.OK.value()
+                        , HttpStatus.OK.getReasonPhrase()
+                        ,"部署成功！"));
     }
 
 
@@ -93,8 +109,8 @@ public class ActivitiControler {
     }
 
     @GetMapping("/delDepl")
-    Object delDepl(String key) {
-        repositoryService.deleteDeployment(key,true);
+    Object delDepl(String id) {
+        repositoryService.deleteDeployment(id,true);
         return ResponseEntity.ok(
                 new Result(
                         HttpStatus.OK.value()
@@ -102,8 +118,13 @@ public class ActivitiControler {
     }
 
     @GetMapping("/start")
-    Object start(String key) {
-        ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(key);
+    Object start(String id) {
+        //流程定义根据[部署编号]查询[业务编号]
+        ProcessDefinition processDefinition = repositoryService
+                .createProcessDefinitionQuery().deploymentId(id).singleResult();
+
+        //根据业务编号确定流程
+        ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(processDefinition.getKey());
         return ResponseEntity.ok(
                 new Result(
                         HttpStatus.OK.value()
