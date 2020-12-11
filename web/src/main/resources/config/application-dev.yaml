@@ -2,22 +2,23 @@ server:
   port: 8081
 
 
+
 spring:
   #Activiti property configuration
   activiti:
 
     database-schema-update: true
-    job-executor-activate: true # asyncExecutorEnabled属性设置设置true后将代替那些老的Job executor
+    job-executor-activate: false # asyncExecutorEnabled属性设置设置true后将代替那些老的Job executor
     history-level: full
     db-history-used: true
     #async-executor-activate: true
-    check-process-definitions: false # 自动部署验证设置:true-开启（默认）、false-关闭
+    check-process-definitions: true # 自动部署验证设置:true-开启（默认）、false-关闭
 
   datasource:
-    url: jdbc:mysql://192.168.1.240:3306/activiti7?useUnicode=true&characterEncoding=utf-8&useSSL=true&serverTimezone=UTC&nullCatalogMeansCurrent=true
+    url: jdbc:log4jdbc:mysql://192.168.1.240:3306/activiti7?useUnicode=true&characterEncoding=utf-8&useSSL=true&serverTimezone=UTC&nullCatalogMeansCurrent=true
     username: root
     password: 123456
-    driver-class-name: com.mysql.cj.jdbc.Driver
+    driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
     type: com.alibaba.druid.pool.DruidDataSource
     initialization-mode: always
     initialSize: 5
@@ -51,13 +52,7 @@ spring:
     suffix: .html
     cache: false
 
-
-
 logging:
-  level:
-    com.test.springboot.activiti: debug
-    org:
-      activiti:
-        engine: debug
-  pattern:
-    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} %clr(-%5p)  %clr(${PID:- }){magenta} --- %clr([%15.15t]){faint} %highlight(%-80.80logger{300}){cyan} %clr(:) %m %n%wEx"
+  config: classpath:config/log4j2-dev.xml
+  path: /Users/admin/Downloads
+

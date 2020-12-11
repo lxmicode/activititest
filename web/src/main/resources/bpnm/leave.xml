@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions 
+        xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" 
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+        xmlns:flowable="http://flowable.org/bpmn" 
+        xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" 
+        xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" 
+        xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" 
+        typeLanguage="http://www.w3.org/2001/XMLSchema" 
+        expressionLanguage="http://www.w3.org/1999/XPath" 
+        targetNamespace="http://www.flowable.org/processdef">
+    
+    <process id="test" name="test" isExecutable="true">
+        <documentation>测试</documentation>
+        <startEvent id="start" name="开始" flowable:formFieldValidation="true"></startEvent>
+        <userTask id="shenqing" name="提交申请" flowable:assignee="$INITIATOR" flowable:formFieldValidation="true">
+            <extensionElements>
+                <modeler:activiti-idm-initiator xmlns:modeler="http://flowable.org/modeler"><![CDATA[true]]></modeler:activiti-idm-initiator>
+            </extensionElements>
+        </userTask>
+        <sequenceFlow id="sid-71DFB923-12DE-45A9-8AE1-E140CFBC308D" sourceRef="start" targetRef="shenqing"></sequenceFlow>
+        <userTask id="shenghe" name="审核" flowable:assignee="$INITIATOR" flowable:formFieldValidation="true">
+            <extensionElements>
+                <modeler:activiti-idm-initiator xmlns:modeler="http://flowable.org/modeler"><![CDATA[true]]></modeler:activiti-idm-initiator>
+            </extensionElements>
+        </userTask>
+        <sequenceFlow id="sid-8BA33C75-1160-401D-9DC2-410CEE4DC3D6" sourceRef="shenqing" targetRef="shenghe"></sequenceFlow>
+        <endEvent id="end" name="结束"></endEvent>
+        <sequenceFlow id="sid-4E7CC3A7-D5C7-4E6D-8461-DB32D2423B18" sourceRef="shenghe" targetRef="end"></sequenceFlow>
+    </process>
+    <bpmndi:BPMNDiagram id="BPMNDiagram_test">
+        <bpmndi:BPMNPlane bpmnElement="test" id="BPMNPlane_test">
+            <bpmndi:BPMNShape bpmnElement="start" id="BPMNShape_start">
+                <omgdc:Bounds height="30.0" width="30.0" x="135.0" y="160.0"></omgdc:Bounds>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="shenqing" id="BPMNShape_shenqing">
+                <omgdc:Bounds height="80.0" width="100.0" x="210.0" y="135.0"></omgdc:Bounds>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="shenghe" id="BPMNShape_shenghe">
+                <omgdc:Bounds height="80.0" width="100.0" x="345.0" y="135.0"></omgdc:Bounds>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="end" id="BPMNShape_end">
+                <omgdc:Bounds height="28.0" width="28.0" x="500.0" y="161.0"></omgdc:Bounds>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNEdge bpmnElement="sid-4E7CC3A7-D5C7-4E6D-8461-DB32D2423B18" id="BPMNEdge_sid-4E7CC3A7-D5C7-4E6D-8461-DB32D2423B18">
+                <omgdi:waypoint x="444.94999999998777" y="175.0"></omgdi:waypoint>
+                <omgdi:waypoint x="500.0" y="175.0"></omgdi:waypoint>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="sid-8BA33C75-1160-401D-9DC2-410CEE4DC3D6" id="BPMNEdge_sid-8BA33C75-1160-401D-9DC2-410CEE4DC3D6">
+                <omgdi:waypoint x="309.9499999999527" y="175.0"></omgdi:waypoint>
+                <omgdi:waypoint x="344.99999999997203" y="175.0"></omgdi:waypoint>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="sid-71DFB923-12DE-45A9-8AE1-E140CFBC308D" id="BPMNEdge_sid-71DFB923-12DE-45A9-8AE1-E140CFBC308D">
+                <omgdi:waypoint x="164.94999848995764" y="175.0"></omgdi:waypoint>
+                <omgdi:waypoint x="210.0" y="175.0"></omgdi:waypoint>
+            </bpmndi:BPMNEdge>
+        </bpmndi:BPMNPlane>
+    </bpmndi:BPMNDiagram>
+</definitions>

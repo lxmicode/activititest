@@ -9,7 +9,8 @@
 <body>
 
 
-<table id="table" border="1">
+<table id="prodDef" border="1" cellpadding="0" >
+    <caption>流程定义</caption>
     <tr>
         <th>id</th>
         <th>业务编号</th>
@@ -20,13 +21,72 @@
     </tr>
 </table>
 
+<table id="proDepl" border="1" cellpadding="0" >
+    <caption>流程部署</caption>
+    <tr>
+        <th>id</th>
+        <th>业务编号</th>
+        <th width="120px">租户编号</th>
+        <th width="120px">流程名</th>
+        <th width="50px">版本</th>
+        <th width="150px">操作</th>
+    </tr>
+</table>
+
+<table id="jindu" border="1" cellpadding="0" >
+    <caption>进度</caption>
+    <tr>
+        <th>id</th>
+        <th>业务编号</th>
+        <th width="120px">租户编号</th>
+        <th width="120px">流程名</th>
+        <th width="50px">版本</th>
+        <th width="150px">操作</th>
+    </tr>
+</table>
+
+<table id="task" border="1" cellpadding="0" >
+    <caption>任务</caption>
+    <tr>
+        <th>id</th>
+        <th>业务编号</th>
+        <th width="120px">租户编号</th>
+        <th width="120px">流程名</th>
+        <th width="50px">版本</th>
+        <th width="150px">操作</th>
+    </tr>
+</table>
+
+
 <script>
     var url = "http://localhost:8081/";
+
+    $(function(){
+        $.ajax({
+            url: url+"proDefList", success: function (result) {
+                for (var d of result.data){
+                    $("#prodDef").append('' +
+                        '<tr><td>'+d.id+'</td>' +
+                        '<td>'+d.key+'</td>' +
+                        '<td>'+d.tenantId+'</td>' +
+                        '<td>'+d.name+'</td>' +
+                        '<td>'+d.version+'</td>' +
+                        '<td>' +
+                        '<button pid="'+d.id+'" onclick="start(this)">启动</button>' +
+                        '<button pid="'+d.id+'" onclick="start(this)">禁止</button>' +
+                        '<button pid="'+d.id+'" onclick="delDepl(this)">删除</button>' +
+                        '</td>' +
+                        '</tr>');
+                }
+            }
+        });
+    });
+
     $(function(){
         $.ajax({
             url: url+"depList", success: function (result) {
                 for (var d of result.data){
-                    $("#table").append('' +
+                    $("#proDepl").append('' +
                         '<tr><td>'+d.id+'</td>' +
                         '<td>'+d.key+'</td>' +
                         '<td>'+d.tenantId+'</td>' +

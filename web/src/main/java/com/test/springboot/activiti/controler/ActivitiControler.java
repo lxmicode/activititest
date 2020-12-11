@@ -46,15 +46,47 @@ public class ActivitiControler {
         List<Deployment> list = repositoryService.createDeploymentQuery().list();
 
         System.out.println(list.size());
-        return new ResponseEntity<>( HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 
+    private String tenantId = "LXM";
 
-    private String tenantId = "test0001";
+
+    /**
+     * 流程定义
+     * 1对多个部署
+     * @return
+     */
+    @GetMapping("/proDefList")
+    Object proDefList() {
+
+        List<ProcessDefinition> list = repositoryService
+                .createProcessDefinitionQuery()
+                .processDefinitionTenantId(tenantId)
+                .list();
+
+        List<Map> data = new ArrayList<>();
+        for (ProcessDefinition dep : list) {
+            Map d = new HashMap();
+            d.put("name", dep.getName());
+            d.put("id", dep.getId());
+            d.put("version", dep.getVersion());
+            d.put("key", dep.getKey());
+            d.put("tenantId", dep.getTenantId());
+            data.add(d);
+        }
+
+        return ResponseEntity.ok(
+                new Result(
+                        HttpStatus.OK.value()
+                        , HttpStatus.OK.getReasonPhrase()
+                        , data));
+    }
 
     /**
      * 部署一个流程
+     *
      * @return
      */
     @GetMapping("/dep")
@@ -64,40 +96,47 @@ public class ActivitiControler {
 //                .key("qingjia")
                 .tenantId(tenantId)
                 .addClasspathResource("bpnm/test2.bpmn20.xml")
-                .addClasspathResource("bpnm/test2.png")
+//                .addClasspathResource("bpnm/test2.png")
                 .enableDuplicateFiltering()
                 .deploy();
 
-        if(deploy.isNew()==false){
+        if (deploy.isNew() == false) {
             return ResponseEntity.ok(
                     new Result(
                             HttpStatus.CREATED.value()
                             , HttpStatus.CREATED.getReasonPhrase()
-                            ,"已经存在了，请勿重复添加！"));
+                            , "已经存在了，请勿重复添加！"));
         }
 
         return ResponseEntity.ok(
                 new Result(
                         HttpStatus.OK.value()
                         , HttpStatus.OK.getReasonPhrase()
-                        ,"部署成功！"));
+                        , "部署成功！"));
     }
 
 
-
+    /**
+     * 流程部署列表
+     *
+     * @return
+     */
     @GetMapping("/depList")
     Object depList() {
-        List<Deployment> list = repositoryService.createDeploymentQuery().list();
+        List<Deployment> list = repositoryService
+                .createDeploymentQuery().deploymentTenantId(tenantId).list();
 //        return new ResponseEntity<>(list, HttpStatus.OK);
 
+
         List<Map> data = new ArrayList<>();
+        Map d;
         for (Deployment dep : list) {
-            Map d = new HashMap();
-            d.put("name",dep.getName());
-            d.put("id",dep.getId());
-            d.put("version",dep.getVersion());
-            d.put("key",dep.getKey());
-            d.put("tenantId",dep.getTenantId());
+            d = new HashMap();
+            d.put("name", dep.getName());
+            d.put("id", dep.getId());
+            d.put("version", dep.getVersion());
+            d.put("key", dep.getKey());
+            d.put("tenantId", dep.getTenantId());
             data.add(d);
         }
 
@@ -105,12 +144,14 @@ public class ActivitiControler {
                 new Result(
                         HttpStatus.OK.value()
                         , HttpStatus.OK.getReasonPhrase()
-                        ,data));
+                        , data));
     }
+
+
 
     @GetMapping("/delDepl")
     Object delDepl(String id) {
-        repositoryService.deleteDeployment(id,true);
+        repositoryService.deleteDeployment(id, true);
         return ResponseEntity.ok(
                 new Result(
                         HttpStatus.OK.value()
@@ -119,17 +160,26 @@ public class ActivitiControler {
 
     @GetMapping("/start")
     Object start(String id) {
-        //流程定义根据[部署编号]查询[业务编号]
-        ProcessDefinition processDefinition = repositoryService
-                .createProcessDefinitionQuery().deploymentId(id).singleResult();
+        try {
+            //流程定义根据[部署编号]查询[业务编号]
+//            ProcessDefinition processDefinition = repositoryService
+//                    .createProcessDefinitionQuery().deploymentId(id).singleResult();
 
-        //根据业务编号确定流程
-        ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(processDefinition.getKey());
-        return ResponseEntity.ok(
-                new Result(
-                        HttpStatus.OK.value()
-                        , HttpStatus.OK.getReasonPhrase()
-                        ,processInstance.getName()));
+            //根据业务编号确定流程
+            ProcessInstance processInstance = runtimeService.startProcessInstanceById(id);
+            return ResponseEntity.ok(
+                    new Result(
+                            HttpStatus.OK.value()
+                            , HttpStatus.OK.getReasonPhrase()
+                            , processInstance.getName()));
+        } catch (Exception e) {
+            return ResponseEntity.ok(
+                    new Result(
+                            HttpStatus.INTERNAL_SERVER_ERROR.value()
+                            , HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase()
+                            , e.getMessage()));
+        }
+
     }
 
     @GetMapping("/task")
@@ -139,7 +189,7 @@ public class ActivitiControler {
                 new Result(
                         HttpStatus.OK.value()
                         , HttpStatus.OK.getReasonPhrase()
-                        ,processInstance.getName()));
+                        , processInstance.getName()));
     }
 
 
