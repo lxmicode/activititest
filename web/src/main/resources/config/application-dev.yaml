@@ -8,11 +8,18 @@ spring:
   activiti:
 
     database-schema-update: true
-    job-executor-activate: false # asyncExecutorEnabled属性设置设置true后将代替那些老的Job executor
+    job-executor-activate: true # asyncExecutorEnabled属性设置设置true后将代替那些老的Job executor
     history-level: full
     db-history-used: true
     #async-executor-activate: true
     check-process-definitions: true # 自动部署验证设置:true-开启（默认）、false-关闭
+
+    async-executor:
+      default-async-job-acquire-wait-time-in-millis: 600000
+      default-timer-job-acquire-wait-time-in-millis: 600000
+      retry-wait-time-in-millis: 600000
+      default-queue-size-full-wait-time: 600000
+      timer-lock-time-in-millis: 600000
 
   datasource:
     url: jdbc:log4jdbc:mysql://192.168.1.240:3306/activiti7?useUnicode=true&characterEncoding=utf-8&useSSL=true&serverTimezone=UTC&nullCatalogMeansCurrent=true
@@ -54,5 +61,4 @@ spring:
 
 logging:
   config: classpath:config/log4j2-dev.xml
-  path: /Users/admin/Downloads
 

@@ -12,7 +12,6 @@ spring:
     #async-executor-activate: true
     check-process-definitions: true # 自动部署验证设置:true-开启（默认）、false-关闭
 
-
     async-executor:
       default-async-job-acquire-wait-time-in-millis: 600000
       default-timer-job-acquire-wait-time-in-millis: 600000
@@ -42,7 +41,7 @@ spring:
     maxPoolPreparedStatementPerConnectionSize: 20
     useGlobalDataSourceStat: true
     connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=500
-
+    ##阿里巴巴数据库
     druid:
       initial-size: 1
       max-active: 20
@@ -53,13 +52,13 @@ spring:
       filters: stat,wall,slf4j
       connection-properties=druid.stat.mergeSql=true;druid.stat.slowSqlMillis: 5000
 
+  ##页面配置
   thymeleaf:
     prefix: classpath:/templates/
     mode: html
     suffix: .html
     cache: false
 
-
+##日志配置
 logging:
-  config: classpath:config/log4j2-dev.xml
-  path: /Users/admin/Downloads
+  config: classpath:config/log4j2-mac.xml
