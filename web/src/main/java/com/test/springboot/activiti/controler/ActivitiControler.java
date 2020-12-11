@@ -2,11 +2,13 @@ package com.test.springboot.activiti.controler;
 
 import com.test.springboot.activiti.entity.Result;
 import org.activiti.engine.*;
+import org.activiti.engine.history.HistoricActivityInstance;
 import org.activiti.engine.impl.persistence.entity.DeploymentEntity;
 import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.repository.ProcessDefinitionQuery;
 import org.activiti.engine.runtime.ProcessInstance;
+import org.activiti.engine.task.Task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -147,8 +149,11 @@ public class ActivitiControler {
                         , data));
     }
 
-
-
+    /**
+     * 删除
+     * @param id
+     * @return
+     */
     @GetMapping("/delDepl")
     Object delDepl(String id) {
         repositoryService.deleteDeployment(id, true);
@@ -158,6 +163,11 @@ public class ActivitiControler {
                         , HttpStatus.OK.getReasonPhrase()));
     }
 
+    /**
+     * 启动流程
+     * @param id
+     * @return
+     */
     @GetMapping("/start")
     Object start(String id) {
         try {
@@ -182,14 +192,76 @@ public class ActivitiControler {
 
     }
 
+    /***
+     * 任务
+     */
     @GetMapping("/task")
-    Object task(String tenantId) {
-        ProcessInstance processInstance = runtimeService.startProcessInstanceById(tenantId);
+    Object task() {
+        List<Task> list = taskService.createTaskQuery().taskTenantId(tenantId).list();
+
+        List<Map> data = new ArrayList<>();
+        Map d;
+        for (Task dep : list) {
+            d = new HashMap();
+            d.put("id", dep.getId());
+            d.put("proDefId", dep.getProcessDefinitionId());
+            d.put("name", dep.getName());
+            d.put("assignee", dep.getAssignee());
+            d.put("bizKey", dep.getBusinessKey());
+            d.put("tenantId", dep.getTenantId());
+            data.add(d);
+        }
+
         return ResponseEntity.ok(
                 new Result(
                         HttpStatus.OK.value()
                         , HttpStatus.OK.getReasonPhrase()
-                        , processInstance.getName()));
+                        , data));
+    }
+
+    /***
+     * 完成任务
+     */
+    @GetMapping("/complete")
+    Object complete(String taskId) {
+
+        taskService.complete(taskId);
+        return ResponseEntity.ok(
+                new Result(
+                        HttpStatus.OK.value()
+                        , HttpStatus.OK.getReasonPhrase()
+                        , ""));
+    }
+
+    /**
+     * 查看历史
+     * @return
+     */
+    @GetMapping("/his")
+    Object his() {
+        List<HistoricActivityInstance> list = historyService
+                .createHistoricActivityInstanceQuery()
+                .activityTenantId(tenantId)
+                .list();
+
+        List<Map> data = new ArrayList<>();
+        Map d;
+        for (HistoricActivityInstance his : list) {
+            d = new HashMap();
+            d.put("id", his.getActivityId());
+            d.put("tenantId", his.getTenantId());
+            d.put("name", his.getActivityName());
+            d.put("assignee", his.getAssignee());
+            d.put("startTime", his.getStartTime());
+            d.put("endTime", his.getEndTime());
+            data.add(d);
+        }
+
+        return ResponseEntity.ok(
+                new Result(
+                        HttpStatus.OK.value()
+                        , HttpStatus.OK.getReasonPhrase()
+                        , data));
     }
 
 

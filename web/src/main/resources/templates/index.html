@@ -9,7 +9,7 @@
 <body>
 
 
-<table id="prodDef" border="1" cellpadding="0" >
+<table id="prodDef" border="1" cellpadding="0"  cellspacing="0">
     <caption>流程定义</caption>
     <tr>
         <th>id</th>
@@ -20,8 +20,8 @@
         <th width="150px">操作</th>
     </tr>
 </table>
-
-<table id="proDepl" border="1" cellpadding="0" >
+<br/><br/><br/>
+<table id="proDepl" border="1" cellpadding="0"  cellspacing="0">
     <caption>流程部署</caption>
     <tr>
         <th>id</th>
@@ -32,35 +32,38 @@
         <th width="150px">操作</th>
     </tr>
 </table>
-
-<table id="jindu" border="1" cellpadding="0" >
-    <caption>进度</caption>
-    <tr>
-        <th>id</th>
-        <th>业务编号</th>
-        <th width="120px">租户编号</th>
-        <th width="120px">流程名</th>
-        <th width="50px">版本</th>
-        <th width="150px">操作</th>
-    </tr>
-</table>
-
-<table id="task" border="1" cellpadding="0" >
+<br/><br/><br/>
+<table id="task" border="1" cellpadding="0"  cellspacing="0">
     <caption>任务</caption>
     <tr>
         <th>id</th>
-        <th>业务编号</th>
+        <th>流程定义编号</th>
         <th width="120px">租户编号</th>
+        <th width="120px">处理人</th>
         <th width="120px">流程名</th>
-        <th width="50px">版本</th>
         <th width="150px">操作</th>
     </tr>
 </table>
+
+<br/><br/><br/>
+<table id="his" border="1" cellpadding="0" cellspacing="0" >
+    <caption>操作记录</caption>
+    <tr>
+        <th>id</th>
+        <th>租户编号</th>
+        <th>当前节点</th>
+        <th width="80px">处理人</th>
+        <th>开始时间</th>
+        <th>结束时间</th>
+    </tr>
+</table>
+
+
 
 
 <script>
     var url = "http://localhost:8081/";
-
+    //定义
     $(function(){
         $.ajax({
             url: url+"proDefList", success: function (result) {
@@ -82,6 +85,7 @@
         });
     });
 
+    //部署列表
     $(function(){
         $.ajax({
             url: url+"depList", success: function (result) {
@@ -103,15 +107,68 @@
         });
     });
 
-    function delDepl(e) {
+    //任务列表
+    $(function(){
         $.ajax({
-            url: url+"delDepl?id="+$(e).attr("pid"), success: function (result) {
+            url: url+"task", success: function (result) {
+                for (var d of result.data){
+                    $("#task").append('' +
+                        '<tr><td>'+d.id+'</td>' +
+                        '<td>'+d.proDefId+'</td>' +
+                        '<td>'+d.tenantId+'</td>' +
+                        '<td>'+d.assignee+'</td>' +
+                        '<td>'+d.name+'</td>' +
+                        '<td>' +
+                        '<button pid="'+d.id+'" proDefId="'+d.proDefId+'" onclick="complete(this)">完成</button>' +
+                        '</td>' +
+                        '</tr>');
+                }
+            }
+        });
+    });
+
+    //历史列表
+    $(function(){
+        $.ajax({
+            url: url+"his", success: function (result) {
+                for (var d of result.data){
+                    $("#his").append('' +
+                        '<tr><td>'+d.id+'</td>' +
+                        '<td>'+d.tenantId+'</td>' +
+                        '<td>'+d.name+'</td>' +
+                        '<td>'+d.assignee+'</td>' +
+                        '<td>'+d.startTime+'</td>' +
+                        '<td>'+d.endTime+'</td>' +
+
+                        '</tr>');
+                }
+            }
+        });
+    });
+
+    //完成
+    function complete(e) {
+        $.ajax({
+            url: url+"complete?taskId="+$(e).attr("pid"), success: function (result) {
                 alert(result.message);
-                window.location.reload();
+                if("200"==result.code)
+                    window.location.reload();
             }
         });
     }
 
+    //删除
+    function delDepl(e) {
+        $.ajax({
+            url: url+"delDepl?id="+$(e).attr("pid"), success: function (result) {
+                alert(result.message);
+                if("200"==result.code)
+                    window.location.reload();
+            }
+        });
+    }
+
+    //部署
     function start(e) {
         $.ajax({
             url: url+"start?id="+$(e).attr("pid"), success: function (result) {
