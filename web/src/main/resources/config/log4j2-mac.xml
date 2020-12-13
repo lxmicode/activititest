@@ -27,7 +27,7 @@
     </Appenders>
     <Loggers>
 
-        <!-- log4jdbc-log4j2 -->
+        <!-- log4jdb 配置 -->
         <Logger name="jdbc.sqlonly"        level="INFO"/>
         <Logger name="jdbc.sqltiming"      level="ERROR"/>
         <Logger name="jdbc.audit"          level="ERROR"/>
@@ -35,7 +35,7 @@
         <Logger name="jdbc.resultsettable" level="ERROR"/>
         <Logger name="jdbc.connection"     level="ERROR"/>
 
-        <Logger name="com.howtodoinjava.app" additivity="false">
+        <Logger name="com.springboot.activiti" additivity="false">
 <!--            <AppenderRef ref="appLog" />-->
             <AppenderRef ref="Console" />
         </Logger>

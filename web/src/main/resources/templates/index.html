@@ -13,46 +13,64 @@
     <caption>流程定义</caption>
     <tr>
         <th>id</th>
+        <th>部署编号</th>
         <th>业务编号</th>
-        <th width="120px">租户编号</th>
-        <th width="120px">流程名</th>
-        <th width="50px">版本</th>
-        <th width="150px">操作</th>
+        <th>租户编号</th>
+        <th>流程名</th>
+        <th>版本</th>
+        <th>操作</th>
     </tr>
 </table>
 <br/><br/><br/>
 <table id="proDepl" border="1" cellpadding="0"  cellspacing="0">
     <caption>流程部署</caption>
     <tr>
-        <th>id</th>
-        <th>业务编号</th>
-        <th width="120px">租户编号</th>
-        <th width="120px">流程名</th>
-        <th width="50px">版本</th>
-        <th width="150px">操作</th>
+        <th>id(部署编号)</th>
+        <th>定义编号</th>
+        <th>租户编号</th>
+        <th>流程名</th>
+        <th>版本</th>
+        <th>操作</th>
     </tr>
 </table>
 <br/><br/><br/>
 <table id="task" border="1" cellpadding="0"  cellspacing="0">
     <caption>任务</caption>
     <tr>
-        <th>id</th>
-        <th>流程定义编号</th>
-        <th width="120px">租户编号</th>
-        <th width="120px">处理人</th>
-        <th width="120px">流程名</th>
-        <th width="150px">操作</th>
+        <th>实例编号</th>
+        <th>定义编号</th>
+        <th>业务编号</th>
+        <th>租户编号</th>
+        <th>处理人</th>
+        <th>流程名</th>
+        <th>操作</th>
     </tr>
 </table>
-
+<br/><br/><br/>
+<table id="hisPro" border="1" cellpadding="0" cellspacing="0" >
+    <caption>历史流程</caption>
+    <tr>
+        <th>定义编号</th>
+        <th>部署编号</th>
+        <th>实例编号</th>
+        <th>租户编号</th>
+        <th>业务编号</th>
+        <th>流程名</th>
+        <th>开始时间</th>
+        <th>结束时间</th>
+        <th>操作</th>
+    </tr>
+</table>
 <br/><br/><br/>
 <table id="his" border="1" cellpadding="0" cellspacing="0" >
     <caption>操作记录</caption>
     <tr>
-        <th>id</th>
+        <th>定义编号</th>
+        <th>实例编号</th>
+        <th>节点编号</th>
         <th>租户编号</th>
         <th>当前节点</th>
-        <th width="80px">处理人</th>
+        <th>处理人</th>
         <th>开始时间</th>
         <th>结束时间</th>
     </tr>
@@ -69,15 +87,18 @@
             url: url+"proDefList", success: function (result) {
                 for (var d of result.data){
                     $("#prodDef").append('' +
-                        '<tr><td>'+d.id+'</td>' +
-                        '<td>'+d.key+'</td>' +
-                        '<td>'+d.tenantId+'</td>' +
-                        '<td>'+d.name+'</td>' +
-                        '<td>'+d.version+'</td>' +
+                        '<tr><td>' + d.id + '</td>' +
+                        '<td>' + d.deploymentId + '</td>' +
+                        '<td>' + d.key + '</td>' +
+                        '<td>' + d.tenantId + '</td>' +
+                        '<td>' + d.name + '</td>' +
+                        '<td>' + d.version + '</td>' +
                         '<td>' +
-                        '<button pid="'+d.id+'" onclick="start(this)">启动</button>' +
-                        '<button pid="'+d.id+'" onclick="start(this)">禁止</button>' +
-                        '<button pid="'+d.id+'" onclick="delDepl(this)">删除</button>' +
+                        '<button pid="' + d.id + '" onclick="start(this)">启动</button>' +
+                        '<button pid="' + d.id + '" onclick="startBizKey(this)">启动带业务Key</button>' +
+                        '<button pid="' + d.id + '"  depId="' + d.deploymentId + '" onclick="downloadRes(this)">下载资源</button>' +
+                        '<button pid="' + d.id + '" onclick="start(this)">禁止</button>' +
+                        '<button pid="' + d.deploymentId + '" onclick="delDepl(this)">删除</button>' +
                         '</td>' +
                         '</tr>');
                 }
@@ -97,9 +118,6 @@
                         '<td>'+d.name+'</td>' +
                         '<td>'+d.version+'</td>' +
                         '<td>' +
-                        '<button pid="'+d.id+'" onclick="start(this)">启动</button>' +
-                        '<button pid="'+d.id+'" onclick="start(this)">禁止</button>' +
-                        '<button pid="'+d.id+'" onclick="delDepl(this)">删除</button>' +
                         '</td>' +
                         '</tr>');
                 }
@@ -113,13 +131,15 @@
             url: url+"task", success: function (result) {
                 for (var d of result.data){
                     $("#task").append('' +
-                        '<tr><td>'+d.id+'</td>' +
+                        '<tr><td>'+d.proInsId+'</td>' +
                         '<td>'+d.proDefId+'</td>' +
+                        '<td>'+d.bizKey+'</td>' +
                         '<td>'+d.tenantId+'</td>' +
                         '<td>'+d.assignee+'</td>' +
                         '<td>'+d.name+'</td>' +
                         '<td>' +
-                        '<button pid="'+d.id+'" proDefId="'+d.proDefId+'" onclick="complete(this)">完成</button>' +
+                        '<button pid="'+d.id+'" proInsId="'+d.proInsId+'" onclick="complete(this)">完成</button>' +
+                        '<button proInsId="' + d.proInsId + '" onclick="stopOrStart(this)">挂起或激活</button>' +
                         '</td>' +
                         '</tr>');
                 }
@@ -127,19 +147,44 @@
         });
     });
 
-    //历史列表
+
+    //历史列表-流程
+    $(function(){
+        $.ajax({
+            url: url+"hisPro", success: function (result) {
+                for (var d of result.data){
+                    $("#hisPro").append('' +
+                        '<tr><td>'+d.proDefId+'</td>' +
+                        '<td>'+d.depId+'</td>' +
+                        '<td>'+d.proInsId+'</td>' +
+                        '<td>'+d.tenantId+'</td>' +
+                        '<td>'+d.bizKey+'</td>' +
+                        '<td>'+d.name+'</td>' +
+                        '<td>'+d.startTime+'</td>' +
+                        '<td>'+d.endTime+'</td>' +
+                        '<td>' +
+                        '<button proInsId="' + d.proInsId + '" onclick="delHisPro(this)">删除</button>' +
+                        '</td>' +
+                        '</tr>');
+                }
+            }
+        });
+    });
+
+    //历史列表-操作明细
     $(function(){
         $.ajax({
             url: url+"his", success: function (result) {
                 for (var d of result.data){
                     $("#his").append('' +
-                        '<tr><td>'+d.id+'</td>' +
+                        '<tr><td>'+d.proDefId+'</td>' +
+                        '<td>'+d.proInsId+'</td>' +
+                        '<td>'+d.actId+'</td>' +
                         '<td>'+d.tenantId+'</td>' +
                         '<td>'+d.name+'</td>' +
                         '<td>'+d.assignee+'</td>' +
                         '<td>'+d.startTime+'</td>' +
                         '<td>'+d.endTime+'</td>' +
-
                         '</tr>');
                 }
             }
@@ -149,7 +194,7 @@
     //完成
     function complete(e) {
         $.ajax({
-            url: url+"complete?taskId="+$(e).attr("pid"), success: function (result) {
+            url: url+"complete?taskId="+$(e).attr("pid")+"&proInsId="+$(e).attr("proInsId"), success: function (result) {
                 alert(result.message);
                 if("200"==result.code)
                     window.location.reload();
@@ -161,17 +206,62 @@
     function delDepl(e) {
         $.ajax({
             url: url+"delDepl?id="+$(e).attr("pid"), success: function (result) {
-                alert(result.message);
                 if("200"==result.code)
                     window.location.reload();
             }
         });
     }
 
-    //部署
+    //删除历史
+    function delHisPro(e) {
+        $.ajax({
+            url: url+"delHisPro?proInsId="+$(e).attr("proInsId"), success: function (result) {
+                if("200"==result.code)
+                    window.location.reload();
+            }
+        });
+    }
+
+
+    //启动流程
     function start(e) {
         $.ajax({
             url: url+"start?id="+$(e).attr("pid"), success: function (result) {
+                alert(result.message);
+                window.location.reload();
+            }
+        });
+    }
+    //启动流程-打业务编号
+    function startBizKey(e) {
+        var data = new Date();
+        var year = data.getFullYear().toString();  //获取年
+        var month = (data.getMonth() + 1).toString();    //获取月
+        var day = data.getDay().toString();    //获取月
+        var seconds = data.getSeconds().toString();
+        var bizKey = (year + month + day) + seconds.padStart(3, "0").toString();
+        console.log(bizKey);
+        $.ajax({
+            url: url+"start?id="+$(e).attr("pid")+"&bizKey="+bizKey, success: function (result) {
+                alert(result.message);
+                window.location.reload();
+            }
+        });
+    }
+
+    //挂起或激活
+    function stopOrStart(e) {
+        $.ajax({
+            url: url+"stopOrStart?proInsId="+$(e).attr("proInsId"), success: function (result) {
+                alert(result.message);
+                window.location.reload();
+            }
+        });
+    }
+
+    function downloadRes(e) {
+        $.ajax({
+            url: url+"downloadRes?deploymentId="+$(e).attr("depId"), success: function (result) {
                 alert(result.message);
                 window.location.reload();
             }

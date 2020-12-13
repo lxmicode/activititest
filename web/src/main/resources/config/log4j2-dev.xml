@@ -4,7 +4,7 @@
         <!--日志格式-->
         <Property name="LOG_PATTERN">[%d{yyyy-MM-dd HH:mm:ss} %-5p] [%t] %c:%L-%m%n</Property>
         <!--日志地址-->
-        <Property name="LOG_PATH">/Users/admin/Downloads</Property>
+        <Property name="LOG_PATH">d:\Downloads</Property>
     </Properties>
 
     <springProperty scope="context" name="logging.path" source="logging.path"/>
@@ -32,10 +32,10 @@
         <Logger name="jdbc.sqltiming"      level="ERROR"/>
         <Logger name="jdbc.audit"          level="ERROR"/>
         <Logger name="jdbc.resultset"      level="ERROR"/>
-        <Logger name="jdbc.resultsettable" level="INFO"/>
+        <Logger name="jdbc.resultsettable" level="ERROR"/>
         <Logger name="jdbc.connection"     level="ERROR"/>
 
-        <Logger name="com.howtodoinjava.app" additivity="false">
+        <Logger name="com.springboot.activiti" additivity="false">
 <!--            <AppenderRef ref="appLog" />-->
             <AppenderRef ref="Console" />
         </Logger>
