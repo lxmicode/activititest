@@ -21,6 +21,9 @@ import org.springframework.web.bind.annotation.RestController;
 import java.io.*;
 import java.util.*;
 
+/**
+ * 第一个简单例子
+ */
 @RestController
 public class ActivitiControler {
 
@@ -99,8 +102,8 @@ public class ActivitiControler {
                 .name("第"+(new Random().nextInt(1000))+"个测试")
 //                .key("qingjia")
                 .tenantId(tenantId)
-                .addClasspathResource("bpnm/leave.bpmn")
-                .addClasspathResource("bpnm/leave.png")
+                .addClasspathResource("bpnm/test2.bpmn20.xml")
+                .addClasspathResource("bpnm/test2.png")
                 .enableDuplicateFiltering()
                 .deploy();
 
