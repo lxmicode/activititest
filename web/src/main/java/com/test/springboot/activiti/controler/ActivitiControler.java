@@ -19,10 +19,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 public class ActivitiControler {
@@ -99,11 +96,11 @@ public class ActivitiControler {
     @GetMapping("/dep")
     Object dep() {
         DeploymentEntity deploy = (DeploymentEntity) repositoryService.createDeployment()
-                .name("第一个测试")
+                .name("第"+(new Random().nextInt(1000))+"个测试")
 //                .key("qingjia")
                 .tenantId(tenantId)
-                .addClasspathResource("bpnm/test2.bpmn20.xml")
-//                .addClasspathResource("bpnm/test2.png")
+                .addClasspathResource("bpnm/leave.bpmn")
+                .addClasspathResource("bpnm/leave.png")
                 .enableDuplicateFiltering()
                 .deploy();
 
