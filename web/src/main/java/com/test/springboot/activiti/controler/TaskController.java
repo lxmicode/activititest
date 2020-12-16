@@ -40,18 +40,6 @@ public class TaskController {
 
     private String tenantId = "LXM";
 
-    /**
-     * 启动组任务
-     * @param id
-     * @return
-     */
-    @GetMapping("/start")
-    Object start(String id) {
-        ActivitiControler activitiControler = new ActivitiControler();
-        return activitiControler.start(id, null);
-    }
-
-    //部署
 
 
     /**

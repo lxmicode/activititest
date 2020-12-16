@@ -23,7 +23,7 @@ import java.io.*;
 import java.util.*;
 
 /**
- * 第一个简单例子
+ * 第一个简单流程完整例子
  */
 @RestController
 public class ActivitiControler {

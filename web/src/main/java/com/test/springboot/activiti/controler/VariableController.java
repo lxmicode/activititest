@@ -36,7 +36,7 @@ public class VariableController {
     RuntimeService runtimeService;
 
 
-    private String tenantId = "Lxm";
+    private String tenantId = "LXM";
 
 
     /**
@@ -56,9 +56,9 @@ public class VariableController {
 
             //map key必须与BPMN文件的assignee字段uel表达式保持一致
             Map<String, Object> assigneeMap = new HashMap<>();
-            assigneeMap.put("user1","jacK");
-            assigneeMap.put("user2","郭德纲");
             assigneeMap.put("days","3");
+            //修改重新部署，可以测试
+//            assigneeMap.put("days","4");
             //根据流程实例编号查询
             processInstance = runtimeService.startProcessInstanceById(id,assigneeMap);
 

@@ -12,7 +12,7 @@
       <bpmn2:outgoing>Flow_0itvdvo</bpmn2:outgoing>
     </bpmn2:userTask>
     <bpmn2:sequenceFlow id="Flow_1f1qu3b" sourceRef="StartEvent_1" targetRef="Activity_1d6o11q" />
-    <bpmn2:userTask id="Activity_0cpa29c" name="经理审核" activiti:assignee="郭德纲">
+    <bpmn2:userTask id="Activity_0cpa29c" name="经理审核">
       <bpmn2:extensionElements>
         <activiti:taskListener class="com.test.springboot.activiti.listener.MyTaskListener" event="create" />
       </bpmn2:extensionElements>
