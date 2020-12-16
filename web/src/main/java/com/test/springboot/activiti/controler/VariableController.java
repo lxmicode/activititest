@@ -56,7 +56,7 @@ public class VariableController {
 
             //map key必须与BPMN文件的assignee字段uel表达式保持一致
             Map<String, Object> assigneeMap = new HashMap<>();
-            assigneeMap.put("days","3");
+            assigneeMap.put("days","4");
             //修改重新部署，可以测试
 //            assigneeMap.put("days","4");
             //根据流程实例编号查询

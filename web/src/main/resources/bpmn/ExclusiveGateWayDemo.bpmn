@@ -8,7 +8,9 @@
       <bpmn2:incoming>Flow_0m4wnev</bpmn2:incoming>
       <bpmn2:outgoing>Flow_0yt9as9</bpmn2:outgoing>
     </bpmn2:userTask>
-    <bpmn2:sequenceFlow id="Flow_0m4wnev" sourceRef="StartEvent_1" targetRef="Activity_088lvyz" />
+    <bpmn2:sequenceFlow id="Flow_0m4wnev" sourceRef="StartEvent_1"  targetRef="Activity_088lvyz">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">${days&lt;=3}</bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
     <bpmn2:exclusiveGateway id="Gateway_0xbkokg">
       <bpmn2:incoming>Flow_0yt9as9</bpmn2:incoming>
       <bpmn2:outgoing>Flow_0jta9gi</bpmn2:outgoing>
@@ -19,12 +21,15 @@
       <bpmn2:incoming>Flow_0jta9gi</bpmn2:incoming>
       <bpmn2:outgoing>Flow_1t90tsy</bpmn2:outgoing>
     </bpmn2:userTask>
-    <bpmn2:sequenceFlow id="Flow_0jta9gi" name="天数&#62;=3" sourceRef="Gateway_0xbkokg" targetRef="Activity_0awux19" />
+    <bpmn2:sequenceFlow id="Flow_0jta9gi" name="天数小于等于3" sourceRef="Gateway_0xbkokg" targetRef="Activity_0awux19" >
+
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">${days&gt;3}</bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
     <bpmn2:userTask id="Activity_1nokd3q" name="小组长审批" activiti:assignee="卡卡西">
       <bpmn2:incoming>Flow_1meyyus</bpmn2:incoming>
       <bpmn2:outgoing>Flow_1h3gt9r</bpmn2:outgoing>
     </bpmn2:userTask>
-    <bpmn2:sequenceFlow id="Flow_1meyyus" name="天数&#60;3" sourceRef="Gateway_0xbkokg" targetRef="Activity_1nokd3q" />
+    <bpmn2:sequenceFlow id="Flow_1meyyus" name="天数大于3" sourceRef="Gateway_0xbkokg" targetRef="Activity_1nokd3q" />
     <bpmn2:endEvent id="Event_0lmdou4" name="结束">
       <bpmn2:incoming>Flow_1t90tsy</bpmn2:incoming>
     </bpmn2:endEvent>

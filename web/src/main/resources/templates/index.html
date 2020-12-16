@@ -16,7 +16,7 @@
     <input type="text" id="uelName" value="Uel例子" placeholder="流程名"/>
     <input type="text" id="uelBpmn" value="bpmn/leave.bpmn" placeholder="bpmn流程文件"/>
     <input type="text" id="uelPng" value="bpmn/leave.png" placeholder="bpmn流程图片"/>
-    <button onclick="depUelDemo()">部署uel流程</button><br/>
+    <button onclick="depUelDemo()">部署uel流程(配合启动leave按钮)</button><br/>
     <input type="text" id="listenerName" value="监听器例子" placeholder="流程名"/>
     <input type="text" id="listenerBpmn" value="bpmn/listenerDemo.bpmn" placeholder="bpmn流程文件"/>
     <input type="text" id="listenerPng" value="bpmn/listenerDemo.png" placeholder="bpmn流程图片"/>
@@ -24,11 +24,15 @@
     <input type="text" id="varsName" value="变量例子" placeholder="流程名"/>
     <input type="text" id="varsBpmn" value="bpmn/variableDemo.bpmn" placeholder="bpmn流程文件"/>
     <input type="text" id="varsPng" value="bpmn/variableDemo.png" placeholder="bpmn流程图片"/>
-    <button onclick="depVarDemo()">部署变量流程</button><br/>
+    <button onclick="depVarDemo()">部署变量流程(配合启动变量按钮)</button><br/>
     <input type="text" id="taskName" value="组任务例子" placeholder="流程名"/>
     <input type="text" id="taskBpmn" value="bpmn/claimDemo.bpmn" placeholder="bpmn流程文件"/>
     <input type="text" id="taskPng" value="bpmn/claimDemo.png" placeholder="bpmn流程图片"/>
     <button onclick="depTaskDemo()">部署组任务流程</button><br/>
+    <input type="text" id="exclusiveName" value="排它网关" placeholder="流程名"/>
+    <input type="text" id="exclusiveBpmn" value="bpmn/ExclusiveGateWayDemo.bpmn" placeholder="bpmn流程文件"/>
+    <input type="text" id="exclusivePng" value="bpmn/ExclusiveGateWayDemo.png" placeholder="bpmn流程图片"/>
+    <button onclick="exclusiveDemo()">排它网关流程(配合启动变量按钮)</button><br/>
 </div>
 
 <table id="prodDef" border="1" cellpadding="0"  cellspacing="0">
@@ -122,7 +126,7 @@
                         '<button pid="' + d.id + '" onclick="startBizKey(this)">启动bizKey</button>' +
                         '<button pid="' + d.id + '" pkey="' + d.key + '" onclick="dynAssignee(this)">启动leave流程</button><br/>' +
                         '<button pid="' + d.id + '" pkey="' + d.key + '" onclick="variableDemo(this)">启动变量流程</button>' +
-                        '<button pid="' + d.id + '" pkey="' + d.key + '" onclick="variableDemo(this)">启动网关流程</button>' +
+                        // '<button pid="' + d.id + '" pkey="' + d.key + '" onclick="variableDemo(this)">启动网关流程</button>' +
                         '<button pid="' + d.id + '"  depId="' + d.deploymentId + '" onclick="downloadRes(this)">下载资源</button><br/>' +
                         // '<button pid="' + d.id + '" onclick="start(this)">禁止</button>' +
                         '<button pid="' + d.deploymentId + '" onclick="delDepl(this)">删除</button>' +
@@ -317,8 +321,8 @@
     //流程变量demo
     function variableDemo(e) {
 
-        if("VariableDemo"!=$(e).attr("pkey")){
-            alert("请确定启动了是的【VariableDemo】流程");
+        if("VariableDemo"!=$(e).attr("pkey") && "ExclusiveGateWayDemo"!=$(e).attr("pkey")){
+            alert("请确定启动了是的【VariableDemo】或 【ExclusiveGateWayDemo】流程");
             return;
         }
 
@@ -395,6 +399,19 @@
         $.ajax({
             type: 'POST',
             data: {name:$("#taskName").val(),bpmn:$("#taskBpmn").val(),png:$("#taskPng").val()},
+            url: url+"dynAssignee/dep",
+            success: function (result) {
+                alert(result.message);
+                window.location.reload();
+            }
+        });
+    }
+
+    //排它网关
+    function exclusiveDemo() {
+        $.ajax({
+            type: 'POST',
+            data: {name:$("#exclusiveName").val(),bpmn:$("#exclusiveBpmn").val(),png:$("#exclusivePng").val()},
             url: url+"dynAssignee/dep",
             success: function (result) {
                 alert(result.message);
