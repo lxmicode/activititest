@@ -24,13 +24,11 @@
     <input type="text" id="varsName" value="变量例子" placeholder="流程名"/>
     <input type="text" id="varsBpmn" value="bpmn/variableDemo.bpmn" placeholder="bpmn流程文件"/>
     <input type="text" id="varsPng" value="bpmn/variableDemo.png" placeholder="bpmn流程图片"/>
-    <button onclick="depVarDemo()">部署变量流程</button><br/><br/>
+    <button onclick="depVarDemo()">部署变量流程</button><br/>
     <input type="text" id="taskName" value="组任务例子" placeholder="流程名"/>
     <input type="text" id="taskBpmn" value="bpmn/claimDemo.bpmn" placeholder="bpmn流程文件"/>
     <input type="text" id="taskPng" value="bpmn/claimDemo.png" placeholder="bpmn流程图片"/>
-    <button onclick="depVarDemo()">部署变量流程</button><br/>
-
-
+    <button onclick="depTaskDemo()">部署组任务流程</button><br/>
 </div>
 
 <table id="prodDef" border="1" cellpadding="0"  cellspacing="0">
@@ -58,7 +56,8 @@
     </tr>
 </table>
 <br/><br/>
-<input style="padding:5px;width: 250px;" type="text" id="userId" placeholder="输入负责人，点击受理任务按钮"/>
+<input style="padding:5px;width: 250px;" type="text" id="userId" placeholder="输入负责人，点击受理任务按钮" />
+<input style="padding:5px;width: 250px;" type="text" id="newUserId" placeholder="输入转让人，点击转让按钮" />
 <table id="task" border="1" cellpadding="0"  cellspacing="0">
     <caption>任务</caption>
     <tr>
@@ -169,6 +168,8 @@
                         '<button pid="'+d.id+'" proInsId="'+d.proInsId+'" onclick="complete(this)">完成</button>' +
                         '<button pid="'+d.id+'" proInsId="'+d.proInsId+'" onclick="stopOrStart(this)">挂起或激活</button>' +
                         '<button pid="'+d.id+'" proInsId="'+d.proInsId+'" onclick="claimTask(this)">受理任务</button>' +
+                        '<button pid="'+d.id+'" proInsId="'+d.proInsId+'" onclick="returnTask(this)">归还任务</button>' +
+                        '<button pid="'+d.id+'" proInsId="'+d.proInsId+'" onclick="changeTask(this)">转让任务</button>' +
                         '</td>' +
                         '</tr>');
                 }
@@ -390,6 +391,21 @@
         });
     }
 
+    function depTaskDemo() {
+        $.ajax({
+            type: 'POST',
+            data: {name:$("#taskName").val(),bpmn:$("#taskBpmn").val(),png:$("#taskPng").val()},
+            url: url+"dynAssignee/dep",
+            success: function (result) {
+                alert(result.message);
+                window.location.reload();
+            }
+        });
+    }
+
+
+
+
     //受理任务
     function claimTask(e) {
         $.ajax({
@@ -402,6 +418,33 @@
             }
         });
     }
+
+    //归还任务
+    function returnTask(e) {
+        $.ajax({
+            type: 'POST',
+            data: {taskId:$(e).attr("pid"),userId:$("#userId").val()},
+            url: url+"task/returnTask",
+            success: function (result) {
+                alert(result.message);
+                window.location.reload();
+            }
+        });
+    }
+
+    //转让任务
+    function changeTask(e) {
+        $.ajax({
+            type: 'POST',
+            data: {taskId:$(e).attr("pid"),userId:$("#userId").val(),newUserId:$("#newUserId").val()},
+            url: url+"task/changeTask",
+            success: function (result) {
+                alert(result.message);
+                window.location.reload();
+            }
+        });
+    }
+
 
 
 </script>

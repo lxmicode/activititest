@@ -2,14 +2,14 @@ package com.test.springboot.activiti.controler;
 
 import com.test.springboot.activiti.entity.Result;
 import com.test.springboot.activiti.entity.VariableEntity;
-import org.activiti.engine.*;
-import org.activiti.engine.impl.persistence.entity.DeploymentEntity;
+import org.activiti.engine.RepositoryService;
+import org.activiti.engine.RuntimeService;
+import org.activiti.engine.TaskService;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

@@ -1,21 +1,16 @@
 package com.test.springboot.activiti.controler;
 
 import com.test.springboot.activiti.entity.Result;
-import com.test.springboot.activiti.entity.VariableEntity;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
-import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * 任务
@@ -47,7 +42,7 @@ public class TaskController {
      * @param taskId
      * @return
      */
-    @GetMapping("/claim")
+    @PostMapping("/claim")
     Object claim(String taskId,String userId) {
         try {
 
@@ -76,12 +71,13 @@ public class TaskController {
      * @param taskId
      * @return
      */
-    @GetMapping("/assigneeToGourp")
-    Object assigneeToGourp(String taskId,String userId) {
+    @PostMapping("/returnTask")
+    Object returnTask(String taskId,String userId) {
         try {
             Task task = taskService
                     .createTaskQuery().taskTenantId(tenantId)
                     .taskId(taskId)
+                    .taskAssignee(userId)
                     .singleResult();
             taskService.setAssignee(task.getId(),null);
             return ResponseEntity.ok(
@@ -106,8 +102,8 @@ public class TaskController {
      * @param newUserId 新的负责人
      * @return
      */
-    @GetMapping("/assigneeChange")
-    Object assigneeChange(String taskId,String userId,String newUserId) {
+    @PostMapping("/changeTask")
+    Object changeTask(String taskId,String userId,String newUserId) {
         try {
             Task task = taskService
                     .createTaskQuery().taskTenantId(tenantId)
@@ -118,7 +114,7 @@ public class TaskController {
             return ResponseEntity.ok(
                     new Result(
                             HttpStatus.OK.value()
-                            , userId+" 归还任务完成："+task.getName()));
+                            , userId+" 转让任务给："+newUserId));
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.ok(
