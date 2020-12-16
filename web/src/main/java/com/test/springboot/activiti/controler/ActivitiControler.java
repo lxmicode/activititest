@@ -16,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.*;
@@ -56,7 +57,7 @@ public class ActivitiControler {
     }
 
 
-    private String tenantId = "Lxm";
+    private String tenantId = "LXM";
 
 
     /**
@@ -96,15 +97,14 @@ public class ActivitiControler {
      *
      * @return
      */
-    @GetMapping("/dep")
-    Object dep() {
+    @PostMapping("/dep")
+    Object dep(String name,String bpmn,String png) {
         DeploymentEntity deploy = (DeploymentEntity) repositoryService.createDeployment()
-                .name("第"+(new Random().nextInt(1000))+"个测试")
-//                .key("qingjia")
+                .name(name)
                 .tenantId(tenantId)
-                .addClasspathResource("bpnm/test2.bpmn20.xml")
-                .addClasspathResource("bpnm/test2.png")
-                .enableDuplicateFiltering()
+                .addClasspathResource(bpmn)
+                .addClasspathResource(png)
+//                .enableDuplicateFiltering()
                 .deploy();
 
         if (deploy.isNew() == false) {
@@ -352,7 +352,8 @@ public class ActivitiControler {
         for (HistoricProcessInstance his : list) {
             d = new HashMap();
             d.put("proDefId", his.getProcessDefinitionId());
-            d.put("proInsId", his.getId());
+            d.put("proDepId", his.getDeploymentId());
+            d.put("proInsId", his.getId() );
             d.put("depId", his.getDeploymentId());
             d.put("bizKey", his.getBusinessKey());
             d.put("name", his.getName());
@@ -375,7 +376,7 @@ public class ActivitiControler {
      */
     @GetMapping("/delHisPro")
     Object delHisPro(String proInsId) {
-        historyService.deleteHistoricTaskInstance(proInsId);
+        historyService.deleteHistoricProcessInstance(proInsId);
         return ResponseEntity.ok(
                 new Result(
                         HttpStatus.OK.value()

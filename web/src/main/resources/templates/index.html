@@ -8,6 +8,20 @@
 </head>
 <body>
 
+<div>
+    <input type="text" id="name" value="入门demo" placeholder="流程名"/>
+    <input type="text" id="bpmn" value="bpmn/demo.bpmn" placeholder="bpmn流程文件"/>
+    <input type="text" id="png" value="bpmn/demo.png" placeholder="bpmn流程图片"/>
+    <button onclick="depSimp()">部署简单流程</button><br/>
+    <input type="text" id="uelName" value="Uel例子" placeholder="流程名"/>
+    <input type="text" id="uelBpmn" value="bpmn/leave.bpmn" placeholder="bpmn流程文件"/>
+    <input type="text" id="uelPng" value="bpmn/leave.png" placeholder="bpmn流程图片"/>
+    <button onclick="depUelDemo()">部署uel流程</button><br/>
+    <input type="text" id="listenerName" value="Uel例子" placeholder="流程名"/>
+    <input type="text" id="listenerBpmn" value="bpmn/listenerDemo.bpmn" placeholder="bpmn流程文件"/>
+    <input type="text" id="listenerPng" value="bpmn/listenerDemo.png" placeholder="bpmn流程图片"/>
+    <button onclick="depListenerDemo()">部署uel流程</button>
+</div>
 
 <table id="prodDef" border="1" cellpadding="0"  cellspacing="0">
     <caption>流程定义</caption>
@@ -95,10 +109,10 @@
                         '<td>' + d.version + '</td>' +
                         '<td>' +
                         '<button pid="' + d.id + '" onclick="start(this)">启动</button>' +
-                        '<button pid="' + d.id + '" onclick="startBizKey(this)">启动带业务Key</button>' +
-                        '<button pid="' + d.id + '" onclick="dynAssignee(this)">启动leave流程</button>' +
+                        '<button pid="' + d.id + '" onclick="startBizKey(this)">启动bizKey</button>' +
+                        '<button pid="' + d.id + '" onclick="dynAssignee(this)">启动leave流程</button><br/>' +
                         '<button pid="' + d.id + '"  depId="' + d.deploymentId + '" onclick="downloadRes(this)">下载资源</button>' +
-                        '<button pid="' + d.id + '" onclick="start(this)">禁止</button>' +
+                        // '<button pid="' + d.id + '" onclick="start(this)">禁止</button>' +
                         '<button pid="' + d.deploymentId + '" onclick="delDepl(this)">删除</button>' +
                         '</td>' +
                         '</tr>');
@@ -269,7 +283,6 @@
         });
     }
 
-
     function dynAssignee(e) {
         $.ajax({
             url: url+"dynAssignee/start?id="+$(e).attr("pid"), success: function (result) {
@@ -278,6 +291,44 @@
             }
         });
     }
+
+    function depSimp() {
+        $.ajax({
+            type: 'POST',
+            data: {name:$("#name").val(),bpmn:$("#bpmn").val(),png:$("#png").val()},
+            url: url+"dep",
+            success: function (result) {
+                alert(result.message);
+                window.location.reload();
+            }
+        });
+    }
+
+    function depUelDemo() {
+        $.ajax({
+            type: 'POST',
+            data: {name:$("#uelName").val(),bpmn:$("#uelBpmn").val(),png:$("#uelPng").val()},
+            url: url+"dynAssignee/dep",
+            success: function (result) {
+                alert(result.message);
+                window.location.reload();
+            }
+        });
+    }
+
+    function depListenerDemo() {
+        $.ajax({
+            type: 'POST',
+            data: {name:$("#listenerName").val(),bpmn:$("#listenerBpmn").val(),png:$("#listenerPng").val()},
+            url: url+"dynAssignee/dep",
+            success: function (result) {
+                alert(result.message);
+                window.location.reload();
+            }
+        });
+    }
+
+
 </script>
 </body>
 </html>

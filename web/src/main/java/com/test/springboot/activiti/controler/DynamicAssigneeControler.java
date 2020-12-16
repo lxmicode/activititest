@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -50,7 +51,7 @@ public class DynamicAssigneeControler {
     ManagementService managementService;
 
 
-    private String tenantId = "Lxm";
+    private String tenantId = "LXM";
 
 
     /**
@@ -58,14 +59,13 @@ public class DynamicAssigneeControler {
      *
      * @return
      */
-    @GetMapping("/dep")
-    Object dep() {
+    @PostMapping("dep")
+    Object dep(String name,String bpmn,String png) {
         DeploymentEntity deploy = (DeploymentEntity) repositoryService.createDeployment()
-                .name("测试-uel流程")
-//                .key("qingjia")
+                .name(name)
                 .tenantId(tenantId)
-                .addClasspathResource("bpnm/leave.bpmn")
-                .addClasspathResource("bpnm/leave.png")
+                .addClasspathResource(bpmn)
+                .addClasspathResource(png)
                 .enableDuplicateFiltering()
                 .deploy();
 

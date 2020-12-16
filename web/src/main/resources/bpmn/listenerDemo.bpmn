@@ -1,15 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:activiti="http://activiti.org/bpmn" id="sample-diagram" targetNamespace="http://activiti.org/bpmn" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd">
-  <bpmn2:process id="demo" name="简单-测试例子" isExecutable="true">
+  <bpmn2:process id="ListenerDemo" name="监听器例子" isExecutable="true">
     <bpmn2:startEvent id="StartEvent_1" name="开始">
       <bpmn2:outgoing>Flow_1f1qu3b</bpmn2:outgoing>
     </bpmn2:startEvent>
-    <bpmn2:userTask id="Activity_1d6o11q" name="提交申请" activiti:assignee="张三">
+    <bpmn2:userTask id="Activity_1d6o11q" name="提交申请">
+      <bpmn2:extensionElements>
+        <activiti:taskListener class="com.test.springboot.activiti.listener.MyTaskListener" event="create" />
+      </bpmn2:extensionElements>
       <bpmn2:incoming>Flow_1f1qu3b</bpmn2:incoming>
       <bpmn2:outgoing>Flow_0itvdvo</bpmn2:outgoing>
     </bpmn2:userTask>
     <bpmn2:sequenceFlow id="Flow_1f1qu3b" sourceRef="StartEvent_1" targetRef="Activity_1d6o11q" />
-    <bpmn2:userTask id="Activity_0cpa29c" name="经理审核" activiti:assignee="李经理">
+    <bpmn2:userTask id="Activity_0cpa29c" name="经理审核" activiti:assignee="郭德纲">
+      <bpmn2:extensionElements>
+        <activiti:taskListener class="com.test.springboot.activiti.listener.MyTaskListener" event="create" />
+      </bpmn2:extensionElements>
       <bpmn2:incoming>Flow_0itvdvo</bpmn2:incoming>
       <bpmn2:outgoing>Flow_09eakm3</bpmn2:outgoing>
     </bpmn2:userTask>
@@ -20,7 +26,7 @@
     <bpmn2:sequenceFlow id="Flow_09eakm3" sourceRef="Activity_0cpa29c" targetRef="Event_1pv3vvp" />
   </bpmn2:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
-    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="demo">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="ListenerDemo">
       <bpmndi:BPMNEdge id="Flow_1f1qu3b_di" bpmnElement="Flow_1f1qu3b">
         <di:waypoint x="448" y="258" />
         <di:waypoint x="500" y="258" />
