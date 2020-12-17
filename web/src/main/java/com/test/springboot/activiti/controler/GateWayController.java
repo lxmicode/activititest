@@ -15,10 +15,10 @@ import org.springframework.web.bind.annotation.RestController;
  *      连线如果2个都为false直接结算流程
  *
  *  与连线條件共同点:
- *      当多个为true，执行ID值小的
+ *      当多个为true，执行ID值小的，或在图形设置中可以设置默认走向
  */
 @RestController
-@RequestMapping("/dynAssignee/")
+@RequestMapping("/gateWay/")
 public class GateWayController {
 
     //资源管理类
